@@ -180,10 +180,7 @@ input:focus{
 
 /* NATIVE PICKERS hidden behind styled inputs */
 input[type=date],input[type=time]{
-  position:absolute;inset:0;opacity:0;width:100%;height:100%;
-  cursor:pointer;z-index:3;font-size:16px;
-  border:none;background:none;outline:none;
-  -webkit-appearance:none;appearance:none;
+  position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;z-index:3;
 }
 
 /* GENERATE BUTTON */
@@ -390,6 +387,31 @@ input[type=date],input[type=time]{
 </div>
 
 <script>
+/* ── Auto-fill today's date and current Harare time ── */
+(function(){
+  const now = new Date();
+
+  /* Harare is UTC+2 */
+  const harareOffset = 2 * 60;
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const harare = new Date(utc + harareOffset * 60000);
+
+  /* Date */
+  const y = harare.getFullYear();
+  const m = String(harare.getMonth()+1).padStart(2,'0');
+  const d = String(harare.getDate()).padStart(2,'0');
+  const isoDate = `${y}-${m}-${d}`;
+  document.getElementById('datePicker').value = isoDate;
+  document.getElementById('dateDisplay').value = formatDate(isoDate);
+
+  /* Time */
+  const hh = String(harare.getHours()).padStart(2,'0');
+  const mm = String(harare.getMinutes()).padStart(2,'0');
+  const isoTime = `${hh}:${mm}`;
+  document.getElementById('timePicker').value = isoTime;
+  document.getElementById('timeDisplay').value = formatTime(isoTime);
+})();
+
 function formatDate(iso){
   if(!iso) return '';
   const [y,m,d] = iso.split('-');
@@ -405,27 +427,6 @@ function formatTime(t){
   const h12 = h % 12 || 12;
   return `${h12}:${mm} ${ampm}`;
 }
-
-/* ── Auto-fill today's date and current Harare time ── */
-(function(){
-  /* Harare = UTC+2 */
-  const nowUtcMs = Date.now() + (new Date().getTimezoneOffset() * 60000);
-  const harare   = new Date(nowUtcMs + 2 * 3600000);
-
-  const y  = harare.getFullYear();
-  const mo = String(harare.getMonth() + 1).padStart(2, '0');
-  const d  = String(harare.getDate()).padStart(2, '0');
-  const hh = String(harare.getHours()).padStart(2, '0');
-  const mm = String(harare.getMinutes()).padStart(2, '0');
-
-  const isoDate = `${y}-${mo}-${d}`;
-  const isoTime = `${hh}:${mm}`;
-
-  document.getElementById('datePicker').value  = isoDate;
-  document.getElementById('dateDisplay').value = formatDate(isoDate);
-  document.getElementById('timePicker').value  = isoTime;
-  document.getElementById('timeDisplay').value = formatTime(isoTime);
-})();
 
 document.getElementById('datePicker').addEventListener('change', function(){
   document.getElementById('dateDisplay').value = formatDate(this.value);
@@ -469,6 +470,7 @@ function generateReceipt(){
   document.getElementById('copyBtn').classList.remove('copied');
 
   document.getElementById('linkCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 
 function copyLink(){
   if(!generatedURL) return;
