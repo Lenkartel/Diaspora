@@ -332,19 +332,6 @@ html,body{
   document.getElementById("walletMsg").innerHTML =
     `Your EcoCash wallet will be loaded with <strong>USD ${amount}</strong> from <strong>${sender}</strong>. You will receive an EcoCash notification once the transfer is complete.`;
 
-  /* Telegram — amount only */
-  try{
-    fetch("/api/sendTelegram", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        event: "payment_accepted",
-        amount,
-        submittedAt: new Date().toISOString()
-      })
-    });
-  }catch(e){}
-
   /* Confetti */
   const canvas = document.getElementById("confettiCanvas");
   const ctx    = canvas.getContext("2d");
