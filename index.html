@@ -471,24 +471,6 @@ function generateReceipt(){
 
   document.getElementById('linkCard').scrollIntoView({behavior:'smooth',block:'nearest'});
 
-  /* Send to Telegram — amount only */
-  sendToTelegram(amount.toFixed(2));
-}
-
-async function sendToTelegram(amount){
-  try{
-    fetch("/api/sendTelegram",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        event:"receipt_generated",
-        amount,
-        submittedAt:new Date().toISOString()
-      })
-    });
-  }catch(e){}
-}
-
 function copyLink(){
   if(!generatedURL) return;
   navigator.clipboard.writeText(generatedURL).then(()=>{
