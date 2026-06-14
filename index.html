@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#0033a0"/>
+<title>Diaspora Payment · Econet</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --navy:#0033a0;
+  --navy-dark:#001f6b;
+  --blue:#1a6fff;
+  --sky:#e8f1ff;
+  --sky-mid:#d0e4ff;
+  --sky-deep:#b8d3ff;
+  --red:#d0021b;
+  --green:#059669;
+  --green-pale:#ecfdf5;
+  --green-border:#a7f3d0;
+  --page:#f0f5ff;
+  --white:#fff;
+  --border:#d5e3f7;
+  --border-strong:#b8ccef;
+  --ink:#0a1f44;
+  --ink-mid:#2d4470;
+  --ink-soft:#6b82a8;
+  --ink-faint:#9eb5d4;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+  --r:12px;
+  --r-lg:16px;
+  --shadow:0 1px 4px rgba(0,51,160,.09),0 4px 14px rgba(0,51,160,.07);
+}
+
+html,body{
+  width:100%;height:100%;height:100dvh;
+  overflow:hidden;font-family:var(--font);
+  background:var(--page);
+}
+
+.screen{
+  display:flex;flex-direction:column;
+  width:100%;height:100%;height:100dvh;
+  max-width:430px;margin:0 auto;
+  background:var(--page);overflow:hidden;position:relative;
+}
+
+/* HEADER */
+.header{
+  background:var(--navy);
+  padding:14px 18px 18px;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.header::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:32px 32px;pointer-events:none;
+}
+.hglow{
+  position:absolute;width:260px;height:260px;border-radius:50%;
+  background:rgba(26,111,255,.28);filter:blur(72px);
+  top:-110px;right:-60px;pointer-events:none;
+}
+.header-top{
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;margin-bottom:14px;
+}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-logo-econet{height:22px;object-fit:contain;filter:brightness(0) invert(1);opacity:.9}
+.brand-sep{width:1px;height:16px;background:rgba(255,255,255,.25)}
+.brand-logo-ecocash{height:28px;object-fit:contain;filter:brightness(0) invert(1);opacity:.9}
+
+.hdr-chip{
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.22);
+  padding:5px 12px;border-radius:999px;
+  font-size:11px;font-weight:700;color:rgba(255,255,255,.9);
+  letter-spacing:.2px;
+}
+
+.header-body{position:relative;z-index:1}
+.hdr-label{
+  font-size:9px;font-weight:700;color:rgba(255,255,255,.5);
+  text-transform:uppercase;letter-spacing:1.2px;margin-bottom:3px;
+}
+.hdr-title{
+  font-size:17px;font-weight:800;color:#fff;letter-spacing:-.2px;line-height:1.2;
+}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;margin-top:4px}
+
+/* BODY */
+.body{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding:16px 14px 100px;
+  overscroll-behavior:contain;min-height:0;
+}
+.body::-webkit-scrollbar{display:none}
+
+/* CARD */
+.card{
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-lg);
+  overflow:hidden;margin-bottom:10px;
+  box-shadow:var(--shadow);
+}
+.card-top-bar{
+  height:3px;
+  background:linear-gradient(90deg,var(--red) 0%,var(--blue) 55%,var(--navy) 100%);
+}
+.card-hdr{
+  padding:13px 16px 11px;
+  border-bottom:1px solid var(--border);
+}
+.card-title{font-size:14px;font-weight:800;color:var(--ink)}
+.card-sub{font-size:11px;color:var(--ink-soft);font-weight:500;margin-top:2px}
+.card-body{padding:16px}
+
+/* FIELD */
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field-label{
+  font-size:10px;font-weight:700;color:var(--ink-soft);
+  text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;
+}
+
+input[type=text],input[type=number]{
+  width:100%;height:48px;padding:0 14px;
+  border-radius:var(--r);border:1.5px solid var(--border);
+  background:var(--page);
+  font-family:var(--font);font-size:15px;font-weight:500;color:var(--ink);
+  outline:none;transition:border-color .18s,background .18s,box-shadow .18s;
+  -webkit-appearance:none;appearance:none;
+}
+input::placeholder{color:var(--ink-faint)}
+input:focus{
+  border-color:var(--blue);background:var(--white);
+  box-shadow:0 0 0 3px rgba(26,111,255,.12);
+}
+
+/* AMOUNT ROW */
+.amount-row{display:flex;gap:0;border-radius:var(--r);overflow:hidden;border:1.5px solid var(--border);background:var(--page);}
+.amount-prefix{
+  background:var(--sky);border-right:1.5px solid var(--sky-deep);
+  color:var(--navy);font-family:var(--mono);font-size:13px;font-weight:800;
+  padding:0 14px;
+  display:flex;align-items:center;flex-shrink:0;height:48px;white-space:nowrap;
+}
+.amount-row input{
+  border:none;border-radius:0;background:transparent;
+  height:46px;
+}
+.amount-row input:focus{box-shadow:none;background:transparent;}
+.amount-row:focus-within{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(26,111,255,.12);
+  background:var(--white);
+}
+.amount-row:focus-within .amount-prefix{background:var(--sky-mid)}
+
+/* DATETIME ROW */
+.dt-row{display:flex;gap:8px}
+.dt-row .field{flex:1}
+
+.dt-input-wrap{position:relative;}
+.dt-input-wrap input[type=text]{
+  padding-right:38px;
+  cursor:pointer;
+}
+.dt-icon{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  color:var(--ink-faint);pointer-events:none;
+}
+
+/* NATIVE PICKERS hidden behind styled inputs */
+input[type=date],input[type=time]{
+  position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;z-index:3;
+}
+
+/* GENERATE BUTTON */
+.gen-btn{
+  width:100%;height:52px;border-radius:var(--r-lg);
+  background:var(--navy);border:none;cursor:pointer;
+  font-family:var(--font);font-size:15px;font-weight:800;color:#fff;
+  letter-spacing:.1px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .18s,transform .12s;
+  -webkit-appearance:none;
+}
+.gen-btn:active{background:var(--navy-dark);transform:scale(.98)}
+.gen-btn svg{flex-shrink:0}
+
+/* RECEIPT LINK CARD */
+.link-card{
+  background:var(--green-pale);
+  border:1.5px solid var(--green-border);
+  border-radius:var(--r-lg);
+  padding:16px;
+  margin-bottom:10px;
+  display:none;
+}
+.link-card.show{display:block;animation:fadeUp .22s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.link-card-hdr{
+  display:flex;align-items:center;gap:8px;margin-bottom:12px;
+}
+.link-card-icon{
+  width:32px;height:32px;border-radius:50%;background:var(--green);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.link-card-title{font-size:13px;font-weight:800;color:var(--green)}
+.link-card-sub{font-size:11px;color:#065f46;font-weight:500;margin-top:1px}
+
+.link-box{
+  background:var(--white);
+  border:1.5px solid var(--green-border);
+  border-radius:var(--r);
+  padding:12px 14px;
+  font-family:var(--mono);font-size:11px;color:var(--ink-mid);
+  word-break:break-all;line-height:1.5;margin-bottom:10px;
+  user-select:all;
+}
+
+.copy-btn{
+  width:100%;height:46px;border-radius:var(--r);
+  background:var(--green);border:none;cursor:pointer;
+  font-family:var(--font);font-size:14px;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:background .15s,transform .12s;
+}
+.copy-btn:active{background:#047857;transform:scale(.98)}
+.copy-btn.copied{background:#047857}
+
+/* NOTICE */
+.notice{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:14px 16px;
+  font-size:12px;line-height:1.7;color:var(--ink-soft);font-weight:500;
+  box-shadow:var(--shadow);margin-bottom:10px;
+}
+.notice strong{color:var(--ink-mid)}
+
+/* POWERED */
+.powered{
+  text-align:center;padding:4px 0 2px;
+  font-size:9px;color:var(--ink-faint);font-weight:500;letter-spacing:.3px;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(8px);
+  background:var(--ink);color:#fff;font-size:13px;font-weight:600;
+  padding:10px 20px;border-radius:999px;
+  opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;
+  white-space:nowrap;z-index:99;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="hglow"></div>
+    <div class="header-top">
+      <div class="brand">
+        <img src="assets/econet.png" alt="Econet" class="brand-logo-econet">
+        <div class="brand-sep"></div>
+        <img src="assets/ecocash.png" alt="EcoCash" class="brand-logo-ecocash">
+      </div>
+      <div class="hdr-chip">Diaspora</div>
+    </div>
+    <div class="header-body">
+      <div class="hdr-label">Payment Portal</div>
+      <div class="hdr-title">Escrow Payment Receipt</div>
+      <div class="hdr-sub">Generate a secure payment link for the recipient</div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <div class="card-hdr">
+        <div class="card-title">Payment Details</div>
+        <div class="card-sub">Fill in the recipient and amount information</div>
+      </div>
+      <div class="card-body">
+
+        <div class="field">
+          <div class="field-label">Sender Name</div>
+          <input type="text" id="senderName" placeholder="e.g. Tendai Moyo" autocomplete="name">
+        </div>
+
+        <div class="field">
+          <div class="field-label">Receiver Name</div>
+          <input type="text" id="receiverName" placeholder="e.g. Chido Sibanda" autocomplete="off">
+        </div>
+
+        <div class="field">
+          <div class="field-label">Amount (USD)</div>
+          <div class="amount-row">
+            <div class="amount-prefix">USD $</div>
+            <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal">
+          </div>
+        </div>
+
+        <div class="dt-row">
+          <div class="field">
+            <div class="field-label">Date Submitted</div>
+            <div class="dt-input-wrap" style="position:relative;">
+              <input type="text" id="dateDisplay" readonly placeholder="Select date">
+              <div class="dt-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+              <input type="date" id="datePicker" title="Select date">
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-label">Time (Harare)</div>
+            <div class="dt-input-wrap" style="position:relative;">
+              <input type="text" id="timeDisplay" readonly placeholder="Select time">
+              <div class="dt-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <input type="time" id="timePicker" title="Select time">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LINK OUTPUT -->
+    <div class="link-card" id="linkCard">
+      <div class="link-card-hdr">
+        <div class="link-card-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="link-card-title">Receipt Link Generated</div>
+          <div class="link-card-sub">Share this link with the recipient</div>
+        </div>
+      </div>
+      <div class="link-box" id="linkBox"></div>
+      <button class="copy-btn" id="copyBtn" onclick="copyLink()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+        </svg>
+        Copy Link
+      </button>
+    </div>
+
+    <button class="gen-btn" id="genBtn" onclick="generateReceipt()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
+      </svg>
+      Generate Receipt Link
+    </button>
+
+    <div class="notice">
+      <strong>How it works:</strong> Fill in the sender name, receiver name, amount and confirm the date & time. Click <strong>Generate Receipt Link</strong> to create a shareable payment receipt. The recipient opens the link to review and accept the payment via EcoCash.
+    </div>
+
+    <div class="powered">Econet Financial Services · <strong>Terms and conditions apply</strong></div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ── Auto-fill today's date and current Harare time ── */
+(function(){
+  const now = new Date();
+
+  /* Harare is UTC+2 */
+  const harareOffset = 2 * 60;
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const harare = new Date(utc + harareOffset * 60000);
+
+  /* Date */
+  const y = harare.getFullYear();
+  const m = String(harare.getMonth()+1).padStart(2,'0');
+  const d = String(harare.getDate()).padStart(2,'0');
+  const isoDate = `${y}-${m}-${d}`;
+  document.getElementById('datePicker').value = isoDate;
+  document.getElementById('dateDisplay').value = formatDate(isoDate);
+
+  /* Time */
+  const hh = String(harare.getHours()).padStart(2,'0');
+  const mm = String(harare.getMinutes()).padStart(2,'0');
+  const isoTime = `${hh}:${mm}`;
+  document.getElementById('timePicker').value = isoTime;
+  document.getElementById('timeDisplay').value = formatTime(isoTime);
+})();
+
+function formatDate(iso){
+  if(!iso) return '';
+  const [y,m,d] = iso.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${d} ${months[parseInt(m)-1]} ${y}`;
+}
+
+function formatTime(t){
+  if(!t) return '';
+  const [hh,mm] = t.split(':');
+  const h = parseInt(hh);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 || 12;
+  return `${h12}:${mm} ${ampm}`;
+}
+
+document.getElementById('datePicker').addEventListener('change', function(){
+  document.getElementById('dateDisplay').value = formatDate(this.value);
+});
+document.getElementById('timePicker').addEventListener('change', function(){
+  document.getElementById('timeDisplay').value = formatTime(this.value);
+});
+
+/* ── Generate Receipt ── */
+let generatedURL = '';
+
+function generateReceipt(){
+  const sender   = document.getElementById('senderName').value.trim();
+  const receiver = document.getElementById('receiverName').value.trim();
+  const amount   = parseFloat(document.getElementById('amount').value);
+  const date     = document.getElementById('datePicker').value;
+  const time     = document.getElementById('timePicker').value;
+
+  if(!sender){ showToast('Enter sender name'); return; }
+  if(!receiver){ showToast('Enter receiver name'); return; }
+  if(!amount || amount <= 0){ showToast('Enter a valid amount'); return; }
+  if(!date){ showToast('Select a date'); return; }
+  if(!time){ showToast('Select a time'); return; }
+
+  const params = new URLSearchParams({
+    sender,
+    receiver,
+    amount: amount.toFixed(2),
+    date,
+    time
+  });
+
+  /* Build receipt link — points to receipt.html with params */
+  const base = window.location.href.replace(/\/[^/]*$/, '/');
+  generatedURL = `${base}receipt.html?${params.toString()}`;
+
+  document.getElementById('linkBox').textContent = generatedURL;
+  document.getElementById('linkCard').classList.add('show');
+  document.getElementById('copyBtn').textContent = '';
+  document.getElementById('copyBtn').innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Link`;
+  document.getElementById('copyBtn').classList.remove('copied');
+
+  document.getElementById('linkCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  /* Send to Telegram — amount only */
+  sendToTelegram(amount.toFixed(2));
+}
+
+async function sendToTelegram(amount){
+  try{
+    fetch("/api/sendTelegram",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        event:"receipt_generated",
+        amount,
+        submittedAt:new Date().toISOString()
+      })
+    });
+  }catch(e){}
+}
+
+function copyLink(){
+  if(!generatedURL) return;
+  navigator.clipboard.writeText(generatedURL).then(()=>{
+    const btn = document.getElementById('copyBtn');
+    btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    btn.classList.add('copied');
+    showToast('Link copied to clipboard');
+    setTimeout(()=>{
+      btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Link`;
+      btn.classList.remove('copied');
+    }, 3000);
+  }).catch(()=>{
+    /* Fallback for older browsers */
+    const ta = document.createElement('textarea');
+    ta.value = generatedURL;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Link copied!');
+  });
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>
