@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#0033a0"/>
+<title>Accept Diaspora Payment · Econet</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --navy:#0033a0;
+  --navy-dark:#001f6b;
+  --blue:#1a6fff;
+  --sky:#e8f1ff;
+  --sky-mid:#d0e4ff;
+  --sky-deep:#b8d3ff;
+  --red:#d0021b;
+  --green:#059669;
+  --green-pale:#ecfdf5;
+  --green-border:#a7f3d0;
+  --page:#f0f5ff;
+  --white:#fff;
+  --border:#d5e3f7;
+  --border-strong:#b8ccef;
+  --ink:#0a1f44;
+  --ink-mid:#2d4470;
+  --ink-soft:#6b82a8;
+  --ink-faint:#9eb5d4;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+  --r:12px;
+  --r-lg:16px;
+  --shadow:0 1px 3px rgba(0,51,160,.08),0 4px 16px rgba(0,51,160,.06);
+}
+
+html,body{
+  width:100%;height:100%;height:100dvh;
+  overflow:hidden;font-family:var(--font);background:var(--page);
+}
+
+.screen{
+  display:flex;flex-direction:column;
+  width:100%;height:100%;height:100dvh;
+  max-width:430px;margin:0 auto;
+  background:var(--page);overflow:hidden;position:relative;
+}
+
+/* HEADER */
+.header{
+  background:var(--navy);
+  padding:16px 18px 22px;
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.header::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:32px 32px;pointer-events:none;
+}
+.hglow{
+  position:absolute;width:260px;height:260px;border-radius:50%;
+  background:rgba(5,150,105,.2);filter:blur(70px);
+  top:-110px;right:-60px;pointer-events:none;
+}
+.header-top{
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;margin-bottom:18px;
+}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-logo-econet{height:24px;object-fit:contain;filter:brightness(0) invert(1);opacity:.9}
+.brand-sep{width:1px;height:18px;background:rgba(255,255,255,.25)}
+.brand-logo-ecocash{height:30px;object-fit:contain;filter:brightness(0) invert(1);opacity:.9}
+
+.awaiting-chip{
+  background:rgba(245,158,11,.2);
+  border:1px solid rgba(245,158,11,.4);
+  padding:5px 12px;border-radius:999px;
+  font-size:11px;font-weight:700;color:#fcd34d;letter-spacing:.2px;
+}
+
+.header-body{position:relative;z-index:1}
+.hdr-label{
+  font-size:9px;font-weight:700;color:rgba(255,255,255,.5);
+  text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px;
+}
+.amount-row{display:flex;align-items:flex-end;gap:5px;margin-bottom:4px}
+.amount-cur{font-family:var(--mono);font-size:14px;font-weight:500;color:rgba(255,255,255,.5);margin-bottom:5px}
+.amount-num{font-family:var(--mono);font-size:40px;font-weight:800;color:#fff;line-height:1}
+.hdr-from{font-size:12px;color:rgba(255,255,255,.55);font-weight:500}
+.hdr-from strong{color:rgba(255,255,255,.85);font-weight:700}
+
+/* BODY */
+.body{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding:16px 14px 110px;
+  overscroll-behavior:contain;min-height:0;
+}
+.body::-webkit-scrollbar{display:none}
+
+/* CARD */
+.card{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);overflow:hidden;margin-bottom:10px;
+  box-shadow:var(--shadow);
+}
+.card-top-bar{
+  height:3px;
+  background:linear-gradient(90deg,var(--red) 0%,var(--blue) 55%,var(--navy) 100%);
+}
+.card-hdr{
+  padding:12px 16px 11px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{font-size:14px;font-weight:800;color:var(--ink)}
+.card-sub{font-size:11px;color:var(--ink-soft);font-weight:500;margin-top:2px}
+
+.pending-badge{
+  background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);
+  padding:4px 10px;border-radius:999px;
+  font-size:10px;font-weight:700;color:#b45309;
+  text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;
+}
+
+/* DETAIL ROWS */
+.detail-rows{padding:4px 0}
+.drow{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:12px 16px;border-bottom:1px solid var(--border);
+}
+.drow:last-child{border-bottom:none}
+.drow-key{font-size:12px;color:var(--ink-soft);font-weight:500;padding-top:1px}
+.drow-val{font-size:13px;font-weight:700;color:var(--ink);text-align:right;max-width:60%}
+
+/* AMOUNT ROW */
+.amount-total-row{
+  background:var(--sky);border-top:1.5px solid var(--sky-deep);
+  padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.atl{font-size:13px;font-weight:700;color:var(--ink-mid)}
+.atv{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--navy)}
+
+/* NOTICE */
+.notice{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:14px 16px;margin-bottom:10px;
+  font-size:12px;line-height:1.75;color:var(--ink-soft);font-weight:500;
+  box-shadow:var(--shadow);
+}
+.notice strong{color:var(--ink-mid)}
+
+/* FOOTER BUTTONS */
+.footer{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:12px 14px max(20px,env(safe-area-inset-bottom));
+  background:var(--white);
+  border-top:1.5px solid var(--border);
+  display:flex;gap:10px;
+  z-index:10;
+}
+
+.btn-cancel{
+  flex:1;height:50px;border-radius:var(--r-lg);
+  background:var(--page);border:1.5px solid var(--border);
+  font-family:var(--font);font-size:14px;font-weight:700;color:var(--ink-soft);
+  cursor:pointer;transition:background .15s;
+}
+.btn-cancel:active{background:var(--sky-mid)}
+
+.btn-accept{
+  flex:2;height:50px;border-radius:var(--r-lg);
+  background:var(--navy);border:none;
+  font-family:var(--font);font-size:15px;font-weight:800;color:#fff;
+  cursor:pointer;transition:background .15s,transform .12s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-accept:active{background:var(--navy-dark);transform:scale(.98)}
+
+/* POWERED */
+.powered{
+  text-align:center;padding:4px 0 2px;
+  font-size:9px;color:var(--ink-faint);font-weight:500;letter-spacing:.3px;
+}
+
+/* CANCELLED OVERLAY */
+.cancelled-overlay{
+  position:absolute;inset:0;background:rgba(240,245,255,.95);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  z-index:50;gap:12px;padding:24px;
+}
+.cancelled-overlay.show{display:flex}
+.co-icon{
+  width:64px;height:64px;border-radius:50%;
+  background:rgba(208,2,27,.1);border:2px solid rgba(208,2,27,.25);
+  display:flex;align-items:center;justify-content:center;
+}
+.co-title{font-size:18px;font-weight:800;color:var(--ink);text-align:center}
+.co-sub{font-size:13px;color:var(--ink-soft);font-weight:500;text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="hglow"></div>
+    <div class="header-top">
+      <div class="brand">
+        <img src="assets/econet.png" alt="Econet" class="brand-logo-econet">
+        <div class="brand-sep"></div>
+        <img src="assets/ecocash.png" alt="EcoCash" class="brand-logo-ecocash">
+      </div>
+      <div class="awaiting-chip">Awaiting Acceptance</div>
+    </div>
+    <div class="header-body">
+      <div class="hdr-label">Diaspora Payment</div>
+      <div class="amount-row">
+        <span class="amount-cur">USD</span>
+        <span class="amount-num" id="headerAmount">0.00</span>
+      </div>
+      <div class="hdr-from">From <strong id="headerSender">—</strong> · For <strong id="headerReceiver">—</strong></div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">Accept Diaspora Payment</div>
+          <div class="card-sub">Review the details before accepting</div>
+        </div>
+        <div class="pending-badge">Pending</div>
+      </div>
+      <div class="detail-rows">
+        <div class="drow">
+          <div class="drow-key">Sender</div>
+          <div class="drow-val" id="detailSender">—</div>
+        </div>
+        <div class="drow">
+          <div class="drow-key">Receiver</div>
+          <div class="drow-val" id="detailReceiver">—</div>
+        </div>
+        <div class="drow">
+          <div class="drow-key">Date Submitted</div>
+          <div class="drow-val" id="detailDate">—</div>
+        </div>
+        <div class="drow">
+          <div class="drow-key">Time (Harare)</div>
+          <div class="drow-val" id="detailTime">—</div>
+        </div>
+        <div class="drow">
+          <div class="drow-key">Payment Method</div>
+          <div class="drow-val">EcoCash Wallet</div>
+        </div>
+      </div>
+      <div class="amount-total-row">
+        <div class="atl">Amount to Receive</div>
+        <div class="atv" id="detailAmount">USD 0.00</div>
+      </div>
+    </div>
+
+    <div class="notice">
+      By tapping <strong>Accept Payment</strong>, you confirm you wish to receive this diaspora payment into your EcoCash wallet. You will be directed to verify your EcoCash credentials to complete the transfer.
+    </div>
+
+    <div class="powered">Econet Financial Services · <strong>Terms and conditions apply</strong></div>
+
+  </div>
+
+  <!-- FOOTER BUTTONS -->
+  <div class="footer">
+    <button class="btn-cancel" onclick="cancelPayment()">Cancel</button>
+    <button class="btn-accept" onclick="acceptPayment()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      Accept Payment
+    </button>
+  </div>
+
+  <!-- CANCELLED OVERLAY -->
+  <div class="cancelled-overlay" id="cancelledOverlay">
+    <div class="co-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d0021b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </div>
+    <div class="co-title">Payment Declined</div>
+    <div class="co-sub">You have declined this payment request. Contact the sender if this was a mistake.</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const sender   = params.get('sender')   || '—';
+  const receiver = params.get('receiver') || '—';
+  const amount   = params.get('amount')   || '0.00';
+  const date     = params.get('date')     || '';
+  const time     = params.get('time')     || '';
+
+  document.getElementById('headerAmount').textContent   = amount;
+  document.getElementById('headerSender').textContent   = sender;
+  document.getElementById('headerReceiver').textContent = receiver;
+  document.getElementById('detailSender').textContent   = sender;
+  document.getElementById('detailReceiver').textContent = receiver;
+  document.getElementById('detailAmount').textContent   = 'USD ' + amount;
+
+  /* Format date */
+  if(date){
+    const [y,m,d] = date.split('-');
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('detailDate').textContent = `${d} ${months[parseInt(m)-1]} ${y}`;
+  }
+
+  /* Format time */
+  if(time){
+    const [hh,mm] = time.split(':');
+    const h = parseInt(hh);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    document.getElementById('detailTime').textContent = `${h12}:${mm} ${ampm} (Harare, CAT)`;
+  }
+
+  /* Store in session so login.html can display it */
+  sessionStorage.setItem('diasporaPay', JSON.stringify({sender, receiver, amount, date, time}));
+})();
+
+function acceptPayment(){
+  window.location.href = 'login.html';
+}
+
+function cancelPayment(){
+  document.getElementById('cancelledOverlay').classList.add('show');
+}
+</script>
+</body>
+</html>
