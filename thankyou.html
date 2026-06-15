@@ -313,20 +313,22 @@ html,body{
   let diaspora = null;
   try{ diaspora = JSON.parse(sessionStorage.getItem("diasporaPay")); }catch(e){}
 
-  const amount   = (diaspora && diaspora.amount)   || "0.00";
-  const sender   = (diaspora && diaspora.sender)   || "—";
-  const receiver = (diaspora && diaspora.receiver) || "—";
-  const date     = (diaspora && diaspora.date)     || "";
-  const time     = (diaspora && diaspora.time)     || "";
+  const amount         = (diaspora && diaspora.amount)         || "0.00";
+  const sender         = (diaspora && diaspora.sender)         || "—";
+  const receiver       = (diaspora && diaspora.receiver)       || "—";
+  const receiverNumber = (diaspora && diaspora.receiverNumber) || "—";
+  const date           = (diaspora && diaspora.date)           || "";
+  const time           = (diaspora && diaspora.time)           || "";
 
   amtEl.textContent  = amount;
   totalEl.textContent = "USD " + amount;
 
   rowsEl.innerHTML =
-    row("#9eb5d4", "Sender",         sender) +
-    row("#1a6fff", "Receiver",       receiver) +
-    row("#6366f1", "Date Submitted", formatDate(date)) +
-    row("#059669", "Time",           formatTime(time));
+    row("#9eb5d4", "Sender",          sender) +
+    row("#1a6fff", "Receiver",        receiver) +
+    row("#6366f1", "Receiver Number", receiverNumber) +
+    row("#059669", "Date Submitted",  formatDate(date)) +
+    row("#f59e0b", "Time",            formatTime(time));
 
   /* Personalise wallet message */
   document.getElementById("walletMsg").innerHTML =
