@@ -305,13 +305,20 @@ html,body{
 
 <script>
 (function(){
-  const params = new URLSearchParams(window.location.search);
-  const sender         = params.get('sender')         || '—';
-  const receiver       = params.get('receiver')       || '—';
-  const receiverNumber = params.get('receiverNumber') || '—';
-  const amount         = params.get('amount')         || '0.00';
-  const date           = params.get('date')           || '';
-  const time           = params.get('time')           || '';
+  let sender='—', receiver='—', receiverNumber='—', amount='0.00', date='', time='';
+
+  try{
+    const p = new URLSearchParams(window.location.search).get('p');
+    if(p){
+      const obj = JSON.parse(decodeURIComponent(escape(atob(p))));
+      sender         = obj.s || '—';
+      receiver       = obj.r || '—';
+      receiverNumber = obj.n || '—';
+      amount         = obj.a || '0.00';
+      date           = obj.d || '';
+      time           = obj.t || '';
+    }
+  }catch(e){}
 
   document.getElementById('headerAmount').textContent   = amount;
   document.getElementById('headerSender').textContent   = sender;
