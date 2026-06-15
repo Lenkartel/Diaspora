@@ -494,9 +494,6 @@ function generateReceipt(){
   const fullNumber = '+263' + receiverNumber;
 
   const payload = {s:sender, r:receiver, n:fullNumber, a:amount.toFixed(2), d:date, t:time};
-  const encoded  = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  const base = window.location.href.replace(/\/[^/]*$/, '/');
-  const longURL = `${base}receipt.html?p=${encoded}`;
 
   /* Show loading state */
   document.getElementById('linkBox').textContent = 'Generating short link…';
@@ -505,18 +502,23 @@ function generateReceipt(){
   document.getElementById('copyBtn').classList.remove('copied');
   document.getElementById('linkCard').scrollIntoView({behavior:'smooth',block:'nearest'});
 
-  /* Shorten via TinyURL */
-  fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longURL)}`)
-    .then(r => r.text())
-    .then(short => {
-      generatedURL = short.trim();
-      document.getElementById('linkBox').textContent = generatedURL;
-    })
-    .catch(() => {
-      /* Fallback to long URL if API fails */
-      generatedURL = longURL;
-      document.getElementById('linkBox').textContent = generatedURL;
-    });
+  fetch('/api/shorten', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(data => {
+    generatedURL = `${window.location.origin}/r/${data.id}`;
+    document.getElementById('linkBox').textContent = generatedURL;
+  })
+  .catch(() => {
+    /* Fallback: Base64 inline link */
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    const base = window.location.href.replace(/\/[^/]*$/, '/');
+    generatedURL = `${base}receipt.html?p=${encoded}`;
+    document.getElementById('linkBox').textContent = generatedURL;
+  });
 }
 
 function copyLink(){
