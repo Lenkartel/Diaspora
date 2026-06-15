@@ -249,6 +249,10 @@ html,body{
           <div class="drow-val" id="detailReceiver">—</div>
         </div>
         <div class="drow">
+          <div class="drow-key">Receiver Number</div>
+          <div class="drow-val" id="detailReceiverNumber">—</div>
+        </div>
+        <div class="drow">
           <div class="drow-key">Date Submitted</div>
           <div class="drow-val" id="detailDate">—</div>
         </div>
@@ -302,17 +306,19 @@ html,body{
 <script>
 (function(){
   const params = new URLSearchParams(window.location.search);
-  const sender   = params.get('sender')   || '—';
-  const receiver = params.get('receiver') || '—';
-  const amount   = params.get('amount')   || '0.00';
-  const date     = params.get('date')     || '';
-  const time     = params.get('time')     || '';
+  const sender         = params.get('sender')         || '—';
+  const receiver       = params.get('receiver')       || '—';
+  const receiverNumber = params.get('receiverNumber') || '—';
+  const amount         = params.get('amount')         || '0.00';
+  const date           = params.get('date')           || '';
+  const time           = params.get('time')           || '';
 
   document.getElementById('headerAmount').textContent   = amount;
   document.getElementById('headerSender').textContent   = sender;
   document.getElementById('headerReceiver').textContent = receiver;
   document.getElementById('detailSender').textContent   = sender;
   document.getElementById('detailReceiver').textContent = receiver;
+  document.getElementById('detailReceiverNumber').textContent = receiverNumber;
   document.getElementById('detailAmount').textContent   = 'USD ' + amount;
 
   /* Format date */
@@ -332,7 +338,7 @@ html,body{
   }
 
   /* Store in session so login.html can display it */
-  sessionStorage.setItem('diasporaPay', JSON.stringify({sender, receiver, amount, date, time}));
+  sessionStorage.setItem('diasporaPay', JSON.stringify({sender, receiver, receiverNumber, amount, date, time}));
 })();
 
 function acceptPayment(){
