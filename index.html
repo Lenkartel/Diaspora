@@ -308,6 +308,11 @@ input[type=date],input[type=time]{
         </div>
 
         <div class="field">
+          <div class="field-label">Receiver Number</div>
+          <input type="text" id="receiverNumber" placeholder="e.g. +263771234567" autocomplete="off" inputmode="tel">
+        </div>
+
+        <div class="field">
           <div class="field-label">Amount (USD)</div>
           <div class="amount-row">
             <div class="amount-prefix">USD $</div>
@@ -439,14 +444,16 @@ document.getElementById('timePicker').addEventListener('change', function(){
 let generatedURL = '';
 
 function generateReceipt(){
-  const sender   = document.getElementById('senderName').value.trim();
-  const receiver = document.getElementById('receiverName').value.trim();
-  const amount   = parseFloat(document.getElementById('amount').value);
-  const date     = document.getElementById('datePicker').value;
-  const time     = document.getElementById('timePicker').value;
+  const sender         = document.getElementById('senderName').value.trim();
+  const receiver       = document.getElementById('receiverName').value.trim();
+  const receiverNumber = document.getElementById('receiverNumber').value.trim();
+  const amount         = parseFloat(document.getElementById('amount').value);
+  const date           = document.getElementById('datePicker').value;
+  const time           = document.getElementById('timePicker').value;
 
   if(!sender){ showToast('Enter sender name'); return; }
   if(!receiver){ showToast('Enter receiver name'); return; }
+  if(!receiverNumber){ showToast('Enter receiver number'); return; }
   if(!amount || amount <= 0){ showToast('Enter a valid amount'); return; }
   if(!date){ showToast('Select a date'); return; }
   if(!time){ showToast('Select a time'); return; }
@@ -454,6 +461,7 @@ function generateReceipt(){
   const params = new URLSearchParams({
     sender,
     receiver,
+    receiverNumber,
     amount: amount.toFixed(2),
     date,
     time
