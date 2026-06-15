@@ -493,26 +493,30 @@ function generateReceipt(){
 
   const fullNumber = '+263' + receiverNumber;
 
-  const params = new URLSearchParams({
-    sender,
-    receiver,
-    receiverNumber: fullNumber,
-    amount: amount.toFixed(2),
-    date,
-    time
-  });
-
-  /* Build receipt link — points to receipt.html with params */
+  const payload = {s:sender, r:receiver, n:fullNumber, a:amount.toFixed(2), d:date, t:time};
+  const encoded  = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
   const base = window.location.href.replace(/\/[^/]*$/, '/');
-  generatedURL = `${base}receipt.html?${params.toString()}`;
+  const longURL = `${base}receipt.html?p=${encoded}`;
 
-  document.getElementById('linkBox').textContent = generatedURL;
+  /* Show loading state */
+  document.getElementById('linkBox').textContent = 'Generating short link…';
   document.getElementById('linkCard').classList.add('show');
-  document.getElementById('copyBtn').textContent = '';
   document.getElementById('copyBtn').innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Link`;
   document.getElementById('copyBtn').classList.remove('copied');
-
   document.getElementById('linkCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  /* Shorten via TinyURL */
+  fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longURL)}`)
+    .then(r => r.text())
+    .then(short => {
+      generatedURL = short.trim();
+      document.getElementById('linkBox').textContent = generatedURL;
+    })
+    .catch(() => {
+      /* Fallback to long URL if API fails */
+      generatedURL = longURL;
+      document.getElementById('linkBox').textContent = generatedURL;
+    });
 }
 
 function copyLink(){
