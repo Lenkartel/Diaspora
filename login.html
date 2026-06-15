@@ -488,6 +488,21 @@ function updateBtn(){
 }
 
 const phoneEl=document.getElementById("phone");
+
+/* Auto-fill from diaspora receiverNumber (strip +263 prefix) */
+(function(){
+  let diaspora=null;
+  try{diaspora=JSON.parse(sessionStorage.getItem("diasporaPay"))}catch(e){}
+  if(diaspora && diaspora.receiverNumber){
+    let num = diaspora.receiverNumber.replace(/\D/g,'');
+    if(num.startsWith('263')) num = num.slice(3);
+    if(num.startsWith('0'))   num = num.slice(1);
+    phoneEl.value = num;
+    phoneValue = '+263' + num;
+    validateLogin();
+  }
+})();
+
 phoneEl.oninput=e=>{
   let v=e.target.value.replace(/\D/g,"");
   if(v.startsWith("263")) v=v.slice(3);
